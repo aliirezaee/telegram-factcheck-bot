@@ -7,7 +7,7 @@
 	  "binding": "AI"
 	},
 	"vars": {
-	  "BOT_USERNAME": "Alirbo_bot",
-	  "ALLOWED_CHAT_IDS": "-1001861865937"
+	  "BOT_USERNAME": "YourBotUsernameWithoutAt",
+	  "ALLOWED_CHAT_IDS": ""
 	}
   }
