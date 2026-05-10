@@ -2,6 +2,15 @@
 
 Privacy-friendly Telegram fact-check bot using Cloudflare Workers AI.
 
+## Language
+
+The bot currently replies in Persian (Farsi) by default.
+
+You can change the output language by editing the system prompt inside:
+
+```text
+src/index.ts
+
 ## Features
 
 * Privacy-friendly architecture
