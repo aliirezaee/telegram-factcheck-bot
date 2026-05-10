@@ -1,28 +1,22 @@
 # Telegram Fact-Check Bot
 
-Privacy-friendly Telegram fact-check bot using Cloudflare Workers AI.
+Privacy-friendly Telegram fact-check bot powered by Cloudflare Workers AI.
 
-## Language
-
-The bot currently replies in Persian (Farsi) by default.
-
-You can change the output language by editing the system prompt inside:
-
-```text
-src/index.ts
+Default output language: Persian (Farsi).
+The response language can be changed easily from the system prompt.
 
 ## Features
 
 * Privacy-friendly architecture
-* Telegram Privacy Mode compatible
+* Works with Telegram Privacy Mode
 * Only responds to `/check`
 * No database
 * No message storage
-* No OpenAI API
+* No OpenAI API required
 * Runs fully on Cloudflare Workers
 * Uses Cloudflare Workers AI
-* Tavily-powered search
-* Searches trusted news sources
+* Tavily-powered web search
+* Supports trusted international and Persian news sources
 * Lightweight and low-cost
 
 ## Architecture
@@ -42,19 +36,38 @@ Telegram Group
 @cf/meta/llama-3.1-8b-instruct-fast
 ```
 
-## Search Sources
+## Supported Sources
+
+### International Sources
 
 * Reuters
 * AP News
 * BBC
+* The Guardian
+* New York Times
+* Washington Post
 * Al Jazeera
 * DW
 * AFP
 * France24
 * Euronews
+* FactCheck.org
+* Snopes
+* PolitiFact
 * X (Twitter)
-* Selected Persian news websites
-* Fact-checking websites
+
+### Persian Sources
+
+* Iran International
+* IranWire
+* Radio Farda
+* ISNA
+* IRNA
+* Fararu
+* Entekhab
+* Mehr News
+* Tasnim
+* Fars News
 
 ## Privacy & Security
 
@@ -74,13 +87,23 @@ Telegram Group
 
 ## Setup
 
-### Install
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Configure `wrangler.jsonc`
+---
+
+## Configure Wrangler
+
+Edit:
+
+```text
+wrangler.jsonc
+```
+
+Example:
 
 ```jsonc
 {
@@ -90,20 +113,20 @@ npm install
   "compatibility_date": "2026-05-10",
   "ai": {
     "binding": "AI"
-  },
-  "vars": {
-    "BOT_USERNAME": "YourBotUsernameWithoutAt",
-    "ALLOWED_CHAT_IDS": ""
   }
 }
 ```
 
-### Add Secrets
+---
+
+## Add Cloudflare Secrets
 
 ```bash
 npx wrangler secret put TELEGRAM_BOT_TOKEN
 npx wrangler secret put TAVILY_API_KEY
 npx wrangler secret put TELEGRAM_WEBHOOK_SECRET
+npx wrangler secret put BOT_USERNAME
+npx wrangler secret put ALLOWED_CHAT_IDS
 ```
 
 Generate webhook secret:
@@ -112,13 +135,17 @@ Generate webhook secret:
 openssl rand -hex 32
 ```
 
-### Deploy
+---
+
+## Deploy
 
 ```bash
 npx wrangler deploy
 ```
 
-### Set Telegram Webhook
+---
+
+## Set Telegram Webhook
 
 ```bash
 curl -X POST "https://api.telegram.org/bot$BOT_TOKEN/setWebhook" \
@@ -143,50 +170,74 @@ Example:
 /check Is this news real?
 ```
 
-## Before Publishing to GitHub
+## Language
 
-Remove or avoid exposing:
+The bot currently replies in Persian (Farsi) by default.
+
+Supported output languages are configurable through the system prompt.
+
+Examples:
+
+* Persian (default)
+* English
+* Arabic
+* Turkish
+* French
+* German
+* Any language supported by the model
+
+To change the output language, edit the system prompt in:
+
+```text
+src/index.ts
+```
+
+Find:
+
+```ts
+Answer in Persian.
+```
+
+Replace with:
+
+```ts
+Answer in English.
+```
+
+Or any other language instruction.
+
+## Security Notes
+
+Do NOT expose:
 
 * Telegram bot token
 * Tavily API key
 * Webhook secret
 * Real group chat IDs
-* Any `.env` files
-* Any local logs
+* `.env` files
+* `.dev.vars`
 
-Safe to keep public:
+Recommended:
 
-* `src/index.ts`
-* `wrangler.jsonc`
-* `README.md`
-* `package.json`
-* `.gitignore`
+* Store secrets only in Cloudflare Secrets
+* Keep local secrets in `.dev.vars`
+* Never commit real credentials to GitHub
 
-### Important
+## Recommended Repository Settings
 
-Do NOT commit real values like:
+Enable:
 
-```jsonc
-"ALLOWED_CHAT_IDS": "-100xxxxxxxxxx"
-```
+* Secret scanning
+* Push protection
+* Dependabot alerts
+* Dependency graph
+* CodeQL analysis
 
-Instead use:
+Recommended branch protection:
 
-```jsonc
-"ALLOWED_CHAT_IDS": ""
-```
-
-Also replace:
-
-```jsonc
-"BOT_USERNAME": "YourRealBotName"
-```
-
-with:
-
-```jsonc
-"BOT_USERNAME": "YourBotUsernameWithoutAt"
-```
+* Protect `main`
+* Restrict direct pushes
+* Allow only repository owner pushes
 
 ## License
 
